@@ -65,4 +65,30 @@ inputs.Add(speed, 9);
 float output = fis.Infer(inputs, acceleration);
 ```
 
-In this example, the fuzzy logic system is used to determine the acceleration of an object in a game based on its distance from a target and its current speed. Two fuzzy rules are defined based on the inputs and outputs, and the `Infer` method is called to get the acceleration value. You can modify the fuzzy
+In this example, the fuzzy logic system is used to determine the acceleration of an object in a game based on its distance from a target and its current speed. Two fuzzy rules are defined based on the inputs and outputs, and the `Infer` method is called to get the acceleration value. You can modify the fuzzy logic system definition and rules to suit your specific game requirements.
+
+## Classes
+
+### FuzzySet
+
+An abstract class that represents a fuzzy set. It has a `Name` property and an abstract `GetMembership` method that calculates the membership degree of a value in the set.
+
+### LinguisticVariable
+
+A class that represents a linguistic variable. It has a `Name` property and a list of `FuzzySet` objects that belong to it. You can add `FuzzySet` objects to the variable using the `AddFuzzySet` method.
+
+### FuzzyRule
+
+A class that represents a fuzzy rule. It has two dictionaries: `Antecedents` and `Consequents`. The `Antecedents` dictionary maps `LinguisticVariable` objects to their corresponding `FuzzySet` objects, while the `Consequents` dictionary maps `LinguisticVariable` objects to their corresponding `FuzzySet` objects.
+
+### FuzzyRuleSet
+
+A class that represents a fuzzy rule set. It has a list of `FuzzyRule` objects. You can add `FuzzyRule` objects to the rule set using the `AddRule` method.
+
+### FuzzyInferenceSystem
+
+A class that represents a fuzzy inference system. It has a `FuzzyRuleSet` object. You can create a `FuzzyInferenceSystem` object by passing a `FuzzyRuleSet` object to its constructor. It has an `Infer` method that takes a dictionary of input values and a `LinguisticVariable` object representing the output variable. The `Infer` method returns a float value representing the output.
+
+## Conclusion
+
+This fuzzy logic system implementation can be used in games to make decisions based on fuzzy inputs. You can use it to create AI agents that make decisions based on a combination of factors like distance, speed, health, and more. By modifying the fuzzy sets and rules, you can fine-tune the behavior of the agents to suit your game requirements.
