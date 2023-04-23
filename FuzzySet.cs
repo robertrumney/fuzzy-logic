@@ -2,125 +2,128 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class FuzzySet
+namespace FuzzyLogic
 {
-    public string Name { get; set; }
-    public abstract float GetMembership(float value);
-}
-
-public class LinguisticVariable
-{
-    public string Name { get; set; }
-    public List<FuzzySet> FuzzySets { get; set; }
-
-    public LinguisticVariable(string name)
+    public abstract class FuzzySet
     {
-        Name = name;
-        FuzzySets = new List<FuzzySet>();
+        public string Name { get; set; }
+        public abstract float GetMembership(float value);
     }
 
-    public void AddFuzzySet(FuzzySet fuzzySet)
+    public class LinguisticVariable
     {
-        FuzzySets.Add(fuzzySet);
-    }
-}
+        public string Name { get; set; }
+        public List<FuzzySet> FuzzySets { get; set; }
 
-public class FuzzyRule
-{
-    public Dictionary<LinguisticVariable, FuzzySet> Antecedents { get; set; }
-    public Dictionary<LinguisticVariable, FuzzySet> Consequents { get; set; }
-
-    public FuzzyRule()
-    {
-        Antecedents = new Dictionary<LinguisticVariable, FuzzySet>();
-        Consequents = new Dictionary<LinguisticVariable, FuzzySet>();
-    }
-}
-
-public class FuzzyRuleSet
-{
-    public List<FuzzyRule> Rules { get; set; }
-
-    public FuzzyRuleSet()
-    {
-        Rules = new List<FuzzyRule>();
-    }
-
-    public void AddRule(FuzzyRule rule)
-    {
-        Rules.Add(rule);
-    }
-}
-
-public float Infer(Dictionary<LinguisticVariable, float> inputs, LinguisticVariable outputVariable)
-{
-    // Step 1: Fuzzification
-    Dictionary<FuzzySet, float> inputMemberships = new Dictionary<FuzzySet, float>();
-    foreach (var input in inputs)
-    {
-        if (!RuleSet.Rules.Any(rule => rule.Antecedents.ContainsKey(input.Key)))
+        public LinguisticVariable(string name)
         {
-            throw new ArgumentException($"Linguistic variable {input.Key.Name} is not used in any rule antecedent.");
+            Name = name;
+            FuzzySets = new List<FuzzySet>();
         }
-        foreach (var fuzzySet in input.Key.FuzzySets)
+
+        public void AddFuzzySet(FuzzySet fuzzySet)
         {
-            float membership = fuzzySet.GetMembership(input.Value);
-            inputMemberships.Add(fuzzySet, membership);
+            FuzzySets.Add(fuzzySet);
         }
     }
 
-    // Step 2: Rule evaluation
-    Dictionary<FuzzySet, float> ruleOutputs = new Dictionary<FuzzySet, float>();
-    foreach (var rule in RuleSet.Rules)
+    public class FuzzyRule
     {
-        if (!rule.Antecedents.Keys.All(input => inputs.ContainsKey(input)))
+        public Dictionary<LinguisticVariable, FuzzySet> Antecedents { get; set; }
+        public Dictionary<LinguisticVariable, FuzzySet> Consequents { get; set; }
+
+        public FuzzyRule()
         {
-            throw new ArgumentException($"Not all antecedent linguistic variables of rule {rule} are present in the inputs.");
+            Antecedents = new Dictionary<LinguisticVariable, FuzzySet>();
+            Consequents = new Dictionary<LinguisticVariable, FuzzySet>();
         }
-        float ruleOutput = float.MaxValue;
-        foreach (var antecedent in rule.Antecedents)
+    }
+
+    public class FuzzyRuleSet
+    {
+        public List<FuzzyRule> Rules { get; set; }
+
+        public FuzzyRuleSet()
         {
-            float antecedentMembership = inputMemberships[antecedent.Value];
-            if (antecedentMembership < ruleOutput)
+            Rules = new List<FuzzyRule>();
+        }
+
+        public void AddRule(FuzzyRule rule)
+        {
+            Rules.Add(rule);
+        }
+    }
+
+    public float Infer(Dictionary<LinguisticVariable, float> inputs, LinguisticVariable outputVariable)
+    {
+        // Step 1: Fuzzification
+        Dictionary<FuzzySet, float> inputMemberships = new Dictionary<FuzzySet, float>();
+        foreach (var input in inputs)
+        {
+            if (!RuleSet.Rules.Any(rule => rule.Antecedents.ContainsKey(input.Key)))
             {
-                ruleOutput = antecedentMembership;
+                throw new ArgumentException($"Linguistic variable {input.Key.Name} is not used in any rule antecedent.");
+            }
+            foreach (var fuzzySet in input.Key.FuzzySets)
+            {
+                float membership = fuzzySet.GetMembership(input.Value);
+                inputMemberships.Add(fuzzySet, membership);
             }
         }
-        if (ruleOutput < float.MaxValue)
+
+        // Step 2: Rule evaluation
+        Dictionary<FuzzySet, float> ruleOutputs = new Dictionary<FuzzySet, float>();
+        foreach (var rule in RuleSet.Rules)
         {
-            if (!rule.Consequents.ContainsKey(outputVariable))
+            if (!rule.Antecedents.Keys.All(input => inputs.ContainsKey(input)))
             {
-                throw new ArgumentException($"Output variable {outputVariable.Name} is not present in the consequents of rule {rule}.");
+                throw new ArgumentException($"Not all antecedent linguistic variables of rule {rule} are present in the inputs.");
             }
-            ruleOutputs[rule.Consequents[outputVariable]] = ruleOutput;
+            float ruleOutput = float.MaxValue;
+            foreach (var antecedent in rule.Antecedents)
+            {
+                float antecedentMembership = inputMemberships[antecedent.Value];
+                if (antecedentMembership < ruleOutput)
+                {
+                    ruleOutput = antecedentMembership;
+                }
+            }
+            if (ruleOutput < float.MaxValue)
+            {
+                if (!rule.Consequents.ContainsKey(outputVariable))
+                {
+                    throw new ArgumentException($"Output variable {outputVariable.Name} is not present in the consequents of rule {rule}.");
+                }
+                ruleOutputs[rule.Consequents[outputVariable]] = ruleOutput;
+            }
         }
-    }
 
-    if (ruleOutputs.Count == 0)
-    {
-        throw new InvalidOperationException("No rules were fired.");
-    }
+        if (ruleOutputs.Count == 0)
+        {
+            throw new InvalidOperationException("No rules were fired.");
+        }
 
-    // Step 3: Aggregation
-    FuzzySet aggregatedFuzzySet = null;
-    float aggregatedMembership = 0f;
-    foreach (var outputMembership in ruleOutputs)
-    {
+        // Step 3: Aggregation
+        FuzzySet aggregatedFuzzySet = null;
+        float aggregatedMembership = 0f;
+        foreach (var outputMembership in ruleOutputs)
+        {
+            if (aggregatedFuzzySet == null)
+            {
+                aggregatedFuzzySet = outputMembership.Key;
+            }
+            else
+            {
+                aggregatedFuzzySet = aggregatedFuzzySet.Union(outputMembership.Key);
+            }
+            aggregatedMembership = Math.Max(aggregatedMembership, outputMembership.Value);
+        }
+
+        // Step 4: Defuzzification
         if (aggregatedFuzzySet == null)
         {
-            aggregatedFuzzySet = outputMembership.Key;
+            throw new InvalidOperationException("No rule output fuzzy sets were generated.");
         }
-        else
-        {
-            aggregatedFuzzySet = aggregatedFuzzySet.Union(outputMembership.Key);
-        }
-        aggregatedMembership = Math.Max(aggregatedMembership, outputMembership.Value);
+        return aggregatedFuzzySet.Centroid(aggregatedMembership);
     }
-
-    // Step 4: Defuzzification
-    if (aggregatedFuzzySet == null)
-    {
-        throw new InvalidOperationException("No rule output fuzzy sets were generated.");
-    }
-    return aggregatedFuzzySet.Centroid(aggregatedMembership);
 }
