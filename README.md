@@ -18,53 +18,62 @@ Here's an example usage of this implementation within the context of a game:
 ```csharp
 using FuzzyLogic;
 
-// Create the linguistic variables
-LinguisticVariable distance = new LinguisticVariable("Distance");
-LinguisticVariable speed = new LinguisticVariable("Speed");
-LinguisticVariable acceleration = new LinguisticVariable("Acceleration");
+public class Example
+{
+  public void Routine()
+  {
+    // Create the linguistic variables
+    LinguisticVariable distance = new LinguisticVariable("Distance");
+    LinguisticVariable speed = new LinguisticVariable("Speed");
+    LinguisticVariable acceleration = new LinguisticVariable("Acceleration");
 
-// Create the fuzzy sets for each linguistic variable
-FuzzySet near = new TriangleFuzzySet("Near", 0, 0, 10);
-FuzzySet far = new TriangleFuzzySet("Far", 5, 10, 15);
-FuzzySet slow = new TriangleFuzzySet("Slow", 0, 0, 5);
-FuzzySet fast = new TriangleFuzzySet("Fast", 5, 10, 15);
-FuzzySet negative = new TriangleFuzzySet("Negative", -15, -10, -5);
-FuzzySet positive = new TriangleFuzzySet("Positive", 5, 10, 15);
+    // Create the fuzzy sets for each linguistic variable
+    FuzzySet near = new TriangleFuzzySet("Near", 0, 0, 10);
+    FuzzySet far = new TriangleFuzzySet("Far", 5, 10, 15);
+    FuzzySet slow = new TriangleFuzzySet("Slow", 0, 0, 5);
+    FuzzySet fast = new TriangleFuzzySet("Fast", 5, 10, 15);
+    FuzzySet negative = new TriangleFuzzySet("Negative", -15, -10, -5);
+    FuzzySet positive = new TriangleFuzzySet("Positive", 5, 10, 15);
 
-// Add the fuzzy sets to their corresponding linguistic variables
-distance.AddFuzzySet(near);
-distance.AddFuzzySet(far);
-speed.AddFuzzySet(slow);
-speed.AddFuzzySet(fast);
-acceleration.AddFuzzySet(negative);
-acceleration.AddFuzzySet(positive);
+    // Add the fuzzy sets to their corresponding linguistic variables
+    distance.AddFuzzySet(near);
+    distance.AddFuzzySet(far);
+    speed.AddFuzzySet(slow);
+    speed.AddFuzzySet(fast);
+    acceleration.AddFuzzySet(negative);
+    acceleration.AddFuzzySet(positive);
 
-// Create the fuzzy rules
-FuzzyRule rule1 = new FuzzyRule();
-rule1.Antecedents.Add(distance, near);
-rule1.Antecedents.Add(speed, slow);
-rule1.Consequents.Add(acceleration, negative);
+    // Create the fuzzy rules
+    FuzzyRule rule1 = new FuzzyRule();
+    rule1.Antecedents.Add(distance, near);
+    rule1.Antecedents.Add(speed, slow);
+    rule1.Consequents.Add(acceleration, negative);
 
-FuzzyRule rule2 = new FuzzyRule();
-rule2.Antecedents.Add(distance, far);
-rule2.Antecedents.Add(speed, fast);
-rule2.Consequents.Add(acceleration, positive);
+    FuzzyRule rule2 = new FuzzyRule();
+    rule2.Antecedents.Add(distance, far);
+    rule2.Antecedents.Add(speed, fast);
+    rule2.Consequents.Add(acceleration, positive);
 
-// Add the fuzzy rules to a rule set
-FuzzyRuleSet ruleSet = new FuzzyRuleSet();
-ruleSet.AddRule(rule1);
-ruleSet.AddRule(rule2);
+    // Add the fuzzy rules to a rule set
+    FuzzyRuleSet ruleSet = new FuzzyRuleSet();
+    ruleSet.AddRule(rule1);
+    ruleSet.AddRule(rule2);
 
-// Create the fuzzy inference system
-FuzzyInferenceSystem fis = new FuzzyInferenceSystem(ruleSet);
+    // Create the fuzzy inference system
+    FuzzyInferenceSystem fis = new FuzzyInferenceSystem(ruleSet);
 
-// Define the input values
-Dictionary<LinguisticVariable, float> inputs = new Dictionary<LinguisticVariable, float>();
-inputs.Add(distance, 6);
-inputs.Add(speed, 9);
+    // Define the input values
+    Dictionary<LinguisticVariable, float> inputs = new Dictionary<LinguisticVariable, float>();
+    inputs.Add(distance, 6);
+    inputs.Add(speed, 9);
 
-// Infer the output value
-float output = fis.Infer(inputs, acceleration);
+    // Infer the output value
+    float output = fis.Infer(inputs, acceleration);
+    
+    // Display the output in console
+    print(output);
+  }
+}
 ```
 
 In this example, the fuzzy logic system is used to determine the acceleration of an object in a game based on its distance from a target and its current speed. Two fuzzy rules are defined based on the inputs and outputs, and the `Infer` method is called to get the acceleration value. You can modify the fuzzy logic system definition and rules to suit your specific game requirements.
