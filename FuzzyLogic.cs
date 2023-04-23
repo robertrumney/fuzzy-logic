@@ -30,6 +30,14 @@ namespace FuzzyLogic
         public float Peak { get; set; }
         public float End { get; set; }
 
+        public TriangularFuzzySet(string name, float start, float peak, float end)
+        {
+            Name = name;
+            Start = start;
+            Peak = peak;
+            End = end;
+        }
+
         public override float GetMembership(float value)
         {
             if (value <= Start || value >= End)
@@ -54,12 +62,10 @@ namespace FuzzyLogic
         {
             if (other is TriangularFuzzySet triangularFuzzySet)
             {
-                var result = new TriangularFuzzySet
-                {
-                    Start = Math.Min(Start, triangularFuzzySet.Start),
-                    Peak = (Peak + triangularFuzzySet.Peak) / 2f,
-                    End = Math.Max(End, triangularFuzzySet.End),
-                };
+                var result = new TriangularFuzzySet(Name + " or " + triangularFuzzySet.Name,
+                                                    Math.Min(Start, triangularFuzzySet.Start),
+                                                    (Peak + triangularFuzzySet.Peak) / 2f,
+                                                    Math.Max(End, triangularFuzzySet.End));
                 return result;
             }
             throw new ArgumentException($"Cannot compute the union between {GetType()} and {other.GetType()}");
@@ -85,7 +91,6 @@ namespace FuzzyLogic
             }
         }
     }
-
 
     public class LinguisticVariable
     {
@@ -131,24 +136,9 @@ namespace FuzzyLogic
         }
     }
 
-    public class RuleSet
+    public class FuzzyInferenceSystem
     {
-        public List<FuzzyRule> Rules { get; set; }
-
-        public RuleSet()
-        {
-            Rules = new List<FuzzyRule>();
-        }
-
-        public void AddRule(FuzzyRule rule)
-        {
-            Rules.Add(rule);
-        }
-    }
-
-    public class FuzzyLogic
-    {
-        public float Infer(Dictionary<LinguisticVariable, float> inputs, LinguisticVariable outputVariable, RuleSet ruleSet)
+        public float Infer(Dictionary<LinguisticVariable, float> inputs, LinguisticVariable outputVariable, FuzzyRuleSet ruleSet)
         {
             // Step 1: Fuzzification
             Dictionary<FuzzySet, float> inputMemberships = new Dictionary<FuzzySet, float>();
