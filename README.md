@@ -16,11 +16,14 @@ To use this implementation in your C# project, follow these steps:
 Here's an example usage of this implementation within the context of a game:
 
 ```csharp
+using UnityEngine;
+using System.Collections.Generic;
+
 using FuzzyLogic;
 
-public class Example
+public class FuzzyExample : MonoBehaviour
 {
-    public void Routine()
+    public void Start()
     {
         // Create the linguistic variables
         LinguisticVariable distance = new LinguisticVariable("Distance");
@@ -28,12 +31,12 @@ public class Example
         LinguisticVariable acceleration = new LinguisticVariable("Acceleration");
 
         // Create the fuzzy sets for each linguistic variable
-        FuzzySet near = new TriangleFuzzySet("Near", 0, 0, 10);
-        FuzzySet far = new TriangleFuzzySet("Far", 5, 10, 15);
-        FuzzySet slow = new TriangleFuzzySet("Slow", 0, 0, 5);
-        FuzzySet fast = new TriangleFuzzySet("Fast", 5, 10, 15);
-        FuzzySet negative = new TriangleFuzzySet("Negative", -15, -10, -5);
-        FuzzySet positive = new TriangleFuzzySet("Positive", 5, 10, 15);
+        FuzzySet near = new TriangularFuzzySet("Near", 0, 0, 10);
+        FuzzySet far = new TriangularFuzzySet("Far", 5, 10, 15);
+        FuzzySet slow = new TriangularFuzzySet("Slow", 0, 0, 5);
+        FuzzySet fast = new TriangularFuzzySet("Fast", 5, 10, 15);
+        FuzzySet negative = new TriangularFuzzySet("Negative", -15, -10, -5);
+        FuzzySet positive = new TriangularFuzzySet("Positive", 5, 10, 15);
 
         // Add the fuzzy sets to their corresponding linguistic variables
         distance.AddFuzzySet(near);
@@ -60,7 +63,8 @@ public class Example
         ruleSet.AddRule(rule2);
 
         // Create the fuzzy inference system
-        FuzzyInferenceSystem fis = new FuzzyInferenceSystem(ruleSet);
+        FuzzyInferenceSystem fis = new FuzzyInferenceSystem();
+
 
         // Define the input values
         Dictionary<LinguisticVariable, float> inputs = new Dictionary<LinguisticVariable, float>();
@@ -68,7 +72,7 @@ public class Example
         inputs.Add(speed, 9);
 
         // Infer the output value
-        float output = fis.Infer(inputs, acceleration);
+        float output = fis.Infer(inputs, acceleration, ruleSet);
 
         // Display the output in console
         print(output);
