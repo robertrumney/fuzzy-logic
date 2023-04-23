@@ -16,6 +16,8 @@ To use this implementation in your C# project, follow these steps:
 Here's an example usage of this implementation within the context of a game:
 
 ```csharp
+using FuzzyLogic;
+
 // Create the linguistic variables
 LinguisticVariable distance = new LinguisticVariable("Distance");
 LinguisticVariable speed = new LinguisticVariable("Speed");
