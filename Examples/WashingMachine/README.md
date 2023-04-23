@@ -2,20 +2,6 @@
 
 This is a simple Unity C# game script that simulates a modern washing machine that uses fuzzy logic to determine the optimal washing time based on the type and amount of laundry.
 
-## Requirements
-
-To run this script, you need:
-
-- Unity 2019.4 or later
-- Visual Studio or another C# IDE
-
-## Usage
-
-1. Open the `WashingMachine` scene in Unity.
-2. Attach the `WashingMachine` script to a GameObject in the scene.
-3. Set the `laundryAmount` and `laundryType` variables in the Inspector.
-4. Press Play to run the simulation.
-
 ## Fuzzy Sets and Rules
 
 The script defines the following fuzzy sets and rules:
