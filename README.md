@@ -65,7 +65,6 @@ public class FuzzyExample : MonoBehaviour
         // Create the fuzzy inference system
         FuzzyInferenceSystem fis = new FuzzyInferenceSystem();
 
-
         // Define the input values
         Dictionary<LinguisticVariable, float> inputs = new Dictionary<LinguisticVariable, float>();
         inputs.Add(distance, 6);
