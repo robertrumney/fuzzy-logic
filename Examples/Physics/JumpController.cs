@@ -8,6 +8,7 @@ public class JumpController : MonoBehaviour
     public LinguisticVariable distanceToGround;
     public LinguisticVariable jumpHeight;
     public FuzzyRuleSet ruleSet;
+    public KeyCode jumpKey = KeyCode.Space;
 
     private Rigidbody rb;
 
@@ -18,22 +19,26 @@ public class JumpController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Step 1: Fuzzification
-        float distance = DistanceToGround();
-        Dictionary<LinguisticVariable, float> inputs = new Dictionary<LinguisticVariable, float>();
-        inputs[distanceToGround] = distance;
-
-        // Step 2: Rule evaluation
-        float jumpHeightValue = ruleSet.Infer(inputs, jumpHeight);
-
-        // Step 3: Defuzzification
-        float jumpHeightClamped = Mathf.Clamp(jumpHeightValue, 0f, 1f);
-        float jumpForceValue = jumpHeightClamped * jumpForce;
-
-        // Step 4: Apply force to jump
-        if (IsGrounded() && jumpForceValue > 0f)
+        // Check for jump input
+        if (Input.GetKeyDown(jumpKey))
         {
-            rb.AddForce(Vector3.up * jumpForceValue, ForceMode.Impulse);
+            // Step 1: Fuzzification
+            float distance = DistanceToGround();
+            Dictionary<LinguisticVariable, float> inputs = new Dictionary<LinguisticVariable, float>();
+            inputs[distanceToGround] = distance;
+
+            // Step 2: Rule evaluation
+            float jumpHeightValue = ruleSet.Infer(inputs, jumpHeight);
+
+            // Step 3: Defuzzification
+            float jumpHeightClamped = Mathf.Clamp(jumpHeightValue, 0f, 1f);
+            float jumpForceValue = jumpHeightClamped * jumpForce;
+
+            // Step 4: Apply force to jump
+            if (IsGrounded() && jumpForceValue > 0f)
+            {
+                rb.AddForce(Vector3.up * jumpForceValue, ForceMode.Impulse);
+            }
         }
     }
 
