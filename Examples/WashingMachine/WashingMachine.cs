@@ -18,7 +18,7 @@ public class WashingMachine : MonoBehaviour
     // Define the fuzzy rules
     FuzzyRuleSet ruleSet = new FuzzyRuleSet();
 
-    void Start()
+    private void Start()
     {
         // Initialize the fuzzy sets for the input variables
         laundryAmountVariable.AddFuzzySet(new TriangularFuzzySet("Small", 0f, 1f, 2f));
@@ -53,7 +53,7 @@ public class WashingMachine : MonoBehaviour
         rule3.Consequents[washingTimeVariable] = washingTimeVariable.FuzzySets[1];
         ruleSet.AddRule(rule3);
 
-        FuzzyRule rule4 = new FuzzyRule
+        FuzzyRule rule4 = new FuzzyRule();
         rule4.Antecedents[laundryAmountVariable] = laundryAmountVariable.FuzzySets[1];
         rule4.Antecedents[laundryTypeVariable] = laundryTypeVariable.FuzzySets[0];
         rule4.Consequents[washingTimeVariable] = washingTimeVariable.FuzzySets[1];
@@ -90,7 +90,7 @@ public class WashingMachine : MonoBehaviour
         ruleSet.AddRule(rule9);
     }
 
-    void Update()
+    private void Update()
     {
         // Convert the laundry type string to a fuzzy set
         FuzzySet laundryTypeSet;
