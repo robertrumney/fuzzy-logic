@@ -4,26 +4,6 @@ using System.Collections.Generic;
 
 namespace FuzzyLogic
 {
-    public class FuzzySet
-    {
-        public string Name { get; set; }
-
-        public virtual float GetMembership(float value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual FuzzySet Union(FuzzySet other)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual float Centroid(float membership)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     public class TriangularFuzzySet : FuzzySet
     {
         public float Start { get; set; }
@@ -208,6 +188,26 @@ namespace FuzzyLogic
                 throw new InvalidOperationException("No rule output fuzzy sets were generated.");
             }
             return aggregatedFuzzySet.Centroid(aggregatedMembership);
+        }
+    }
+    
+    public class FuzzySet
+    {
+        public string Name { get; set; }
+
+        public virtual float GetMembership(float value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual FuzzySet Union(FuzzySet other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual float Centroid(float membership)
+        {
+            throw new NotImplementedException();
         }
     }
 }
