@@ -1,11 +1,3 @@
-# FuzzyLogic Library
-
-The `FuzzyLogic` library is a C# library for implementing fuzzy logic systems. It provides classes for defining linguistic variables, fuzzy sets, fuzzy rules, and fuzzy rule sets, and for performing fuzzy inference using the centroid method.
-
-## Installation
-
-To use the `FuzzyLogic` library, simply download the `FuzzyLogic.dll` file and add it as a reference to your C# project.
-
 ## Usage
 
 Here's an example of how to use the `FuzzyLogic` library in Unity for A.I. decision making.
